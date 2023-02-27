@@ -5,16 +5,6 @@ agolo-service:
     repository: agolo.azurecr.io/service/service-discovery
     tag: staging
 
-  envStrings:
-    SUMMARIZATION_API_URL: https://summarization-api.dev.agolo.com/summarization-api-java-0.2.0/v0.2
-    SUMMARIZATION_API_SUBSCRIPTION_KEY: 6efc8c01e6c1408dbbe09c7868904064
-    AUTH_SERVICE_URL: https://authentication.dev.agolo.com/api/v1
-
-  envConfigMaps:
-    MONGODB_DATABASE:
-      name: global-config
-      key: mongo_database
-
   network:
     type: ClusterIP
     ports:

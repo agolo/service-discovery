@@ -8,27 +8,6 @@ agolo-service:
   envStrings:
     TEMP_DIRECTORY_FOR_FILES: /home/agolo/
 
-
-  envConfigMaps:
-    MONGODB_DATABASE:
-      name: global-config
-      key: obs_mongo_database
-    MONGODB_HOSTS:
-      name: global-config
-      key: mongo_dsn
-    MONGODB_REPLICASET:
-      name: global-config
-      key: mongo_replicaset
-
-  envSecrets:
-    MONGODB_USERNAME:
-      name: global-secret
-      key: mongo_username
-    MONGODB_PASSWORD:
-      name: global-secret
-      key: mongo_password
-
-
   resources:
     requests:
       cpu: 0.1
