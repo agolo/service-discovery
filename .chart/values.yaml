@@ -1,0 +1,66 @@
+agolo-service:
+  nameOverride: service-discovery
+  replicas: 1
+  image:
+    repository: agolo.azurecr.io/service/service-discovery
+    tag: staging
+
+  envStrings:
+    TEMP_DIRECTORY_FOR_FILES: /home/agolo/
+
+
+  envConfigMaps:
+    MONGODB_DATABASE:
+      name: global-config
+      key: obs_mongo_database
+    MONGODB_HOSTS:
+      name: global-config
+      key: mongo_dsn
+    MONGODB_REPLICASET:
+      name: global-config
+      key: mongo_replicaset
+
+  envSecrets:
+    MONGODB_USERNAME:
+      name: global-secret
+      key: mongo_username
+    MONGODB_PASSWORD:
+      name: global-secret
+      key: mongo_password
+
+
+  resources:
+    requests:
+      cpu: 0.1
+      memory: 200Mi
+    limits:
+      cpu: 1
+      memory: 2G
+  monitor:
+    prometheus:
+      enabled: true
+      # reference to a port name mentioned above
+      portName: prometheus
+      honorLabels: true
+      path: /metrics
+    # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#define-a-tcp-liveness-probe
+    probes:
+      # failed liveness probe requests will trigger restarts to your pod
+      liveness:
+       initialDelaySeconds: 30
+       httpGet:
+          path: /actuator/health
+          port: 8080
+
+      readiness:
+        initialDelaySeconds: 30
+        httpGet:
+          path: /actuator/health
+          port: 8080
+          
+  network:
+    policy:
+      egress:
+        ipBlock:
+          - 0.0.0.0/0
+        enabled: true

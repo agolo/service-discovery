@@ -1,0 +1,54 @@
+version: 2.1
+orbs:
+  agolo: agolo/agolo@volatile
+workflows:
+  version: 2
+  test_and_deploy:
+    jobs:
+      - agolo/java-junit-test:
+          name: UnitTest
+          context: docker
+          testCommand: ./gradlew test
+          executorName: agolo/testing-docker-jdk17
+          javaOptions: -Xmx4g
+
+#      - agolo/java-junit-dockerized-test:
+#          name: IntegrationTest
+#          context: docker
+#          testCommand: ./gradlew integrationTest
+#          image: agolo.azurecr.io/ops/maven17
+#          javaOptions: -Xmx4g
+#          requires:
+#            - UnitTest
+
+      - agolo/sonar-scan:
+          context: docker
+          buildPath: build
+          requires:
+            - UnitTest
+#            - IntegrationTest
+
+      - agolo/docker-build:
+          context: docker
+          service: service-discovery
+          language: java
+          requires:
+            - UnitTest
+#            - IntegrationTest
+
+      - agolo/deploy-k8s:
+          context: docker
+          release: service-discovery
+          checkoutdir: ~/project
+          workdir: ~/project/.chart/
+          extraFlags: -f values.yaml -f values-${CIRCLE_BRANCH}.yaml
+          kubeContext: ${CIRCLE_BRANCH}
+          requires:
+            - agolo/docker-build
+          filters:
+            branches:
+              only:
+                - prod
+                - staging
+                - dev
+     

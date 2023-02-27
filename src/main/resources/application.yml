@@ -1,0 +1,16 @@
+eureka:
+  client:
+    healthcheck:
+      enabled: true
+    fetch-registry: false
+    register-with-eureka: false
+  instance:
+    appname: Eureka-Service-Registery
+    prefer-ip-address: true
+#    hostname: localhost
+  server:
+    enable-self-preservation: true
+    eviction-interval-timer-in-ms: 1000
+
+server:
+  port: 8761

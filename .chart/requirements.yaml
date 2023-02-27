@@ -1,0 +1,5 @@
+# This file is imported from agolo-service/bootstrap
+dependencies:
+  - name: agolo-service
+    version: 1.7.5
+    repository: "@chartmuseum"
