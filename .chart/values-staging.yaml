@@ -1,0 +1,35 @@
+agolo-service:
+  nameOverride: service-discovery
+  replicas: 1
+  image:
+    repository: agolo.azurecr.io/service/service-discovery
+    tag: staging
+
+  envStrings:
+    SUMMARIZATION_API_URL: https://summarization-api.dev.agolo.com/summarization-api-java-0.2.0/v0.2
+    SUMMARIZATION_API_SUBSCRIPTION_KEY: 6efc8c01e6c1408dbbe09c7868904064
+    AUTH_SERVICE_URL: https://authentication.dev.agolo.com/api/v1
+
+  envConfigMaps:
+    MONGODB_DATABASE:
+      name: global-config
+      key: mongo_database
+
+  network:
+    type: ClusterIP
+    ports:
+      - name: http
+        containerPort: 8080
+        exposedPort: 80
+        https: true
+        ingresses:
+          - host: service-discovery.staging.agolo.com
+            path: /
+        annotations:
+          nginx.ingress.kubernetes.io/proxy-body-size: "200M"
+          nginx.ingress.kubernetes.io/proxy-connect-timeout: "10000"
+          nginx.ingress.kubernetes.io/proxy-read-timeout: "10000"
+          nginx.ingress.kubernetes.io/proxy-send-timeout: "10000"
+      - name: prometheus
+        exposedPort: 8081
+        containerPort: 8081

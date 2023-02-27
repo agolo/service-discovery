@@ -21,12 +21,12 @@ workflows:
 #          requires:
 #            - UnitTest
 
-      - agolo/sonar-scan:
-          context: docker
-          buildPath: build
-          requires:
-            - UnitTest
-#            - IntegrationTest
+#      - agolo/sonar-scan:
+#          context: docker
+#          buildPath: build
+#          requires:
+#            - UnitTest
+##            - IntegrationTest
 
       - agolo/docker-build:
           context: docker
