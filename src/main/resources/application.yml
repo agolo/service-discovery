@@ -10,4 +10,4 @@ eureka:
 #    hostname: localhost
   server:
     enable-self-preservation: true
-    eviction-interval-timer-in-ms: 1000ß
+    eviction-interval-timer-in-ms: 1000
